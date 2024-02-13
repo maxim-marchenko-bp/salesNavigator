@@ -1,0 +1,222 @@
+@import "colors";
+@import "rem";
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: rem(400px);
+  height: rem(600px);
+  border: rem(1px) solid $color-border-grey;
+  background-color: $color-white;
+  border-radius: rem(8px);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: rem(8px) rem(14px);
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: rem(8px);
+
+      .logo {
+        img {
+          width: rem(40px);
+          height: rem(40px);
+          border-radius: 50%;
+          background: $color-light-grey;
+        }
+      }
+
+      .text-container {
+        .name {
+          font-size: rem(14px);
+        }
+
+        .sub-name {
+          font-size: rem(12px);
+          color: $color-grey;
+        }
+      }
+    }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+      gap: rem(20px);
+
+      i {
+        transition: color 0.3s ease;
+      }
+
+      i:hover {
+        cursor: pointer;
+        color: $color-light-grey;
+      }
+    }
+  }
+
+  .divider {
+    border-top: rem(1px) solid $color-divider;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+    flex-grow: 1;
+    padding: rem(14px);
+    overflow-y: scroll;
+
+    .client-message-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
+
+      .client-message-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: rem(4px);
+
+        .client-message {
+          background-color: $color-dark-blue;
+          border-radius: rem(10px) rem(10px) 0 rem(10px);
+          padding: rem(10px);
+
+          .text {
+            font-size: rem(14px);
+            line-height: rem(18px);
+            color: $color-white;
+          }
+        }
+
+        .time {
+          font-size: rem(14px);
+          color: $color-grey;
+        }
+      }
+    }
+
+    .bot-message-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+
+      .bot-message-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: rem(4px);
+
+        .bot-message {
+          background-color: $color-background-grey;
+          border-radius: rem(10px) rem(10px) rem(10px) 0;
+          padding: rem(10px);
+
+          .text {
+            font-size: rem(14px);
+            line-height: rem(18px);
+          }
+
+          .buttons {
+            display: flex;
+            gap: rem(10px);
+            margin-top: rem(12px);
+
+            i {
+              color: $color-dark-grey;
+              transition: color 0.3s ease;
+
+              mdi {
+                font-size: rem(16px);
+              }
+            }
+
+            i:hover {
+              color: $color-black;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .time {
+          font-size: rem(14px);
+          color: $color-grey;
+        }
+      }
+    }
+  }
+
+  .question-tag {
+    display: flex;
+    flex-direction: column;
+    gap: rem(4px);
+    padding: 0 rem(14px);
+
+    .tag-container {
+      width: fit-content;
+      border: rem(1px) solid $color-black;
+      border-radius: rem(10px);
+      padding: rem(2px);
+      transition: background-color 0.3s ease;
+
+      .text {
+        font-size: rem(14px);
+        font-weight: 700;
+      }
+    }
+
+    .tag-container:hover {
+      cursor: pointer;
+      background-color: $color-background-grey;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: rem(14px);
+    padding: rem(14px);
+    font-size: rem(14px);
+    color: $color-grey;
+
+    .input-message-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: rem(8px);
+      height: rem(24px);
+      width: 96%;
+      border-radius: rem(12px);
+      border: rem(1px) solid $color-light-grey;
+      padding: rem(6px);
+
+      input {
+        border: none;
+        flex-grow: 1;
+      }
+
+      input::placeholder {
+        color: $color-grey;
+      }
+
+      input:focus-visible {
+        outline: none;
+      }
+
+      button {
+        height: rem(24px);
+        border: none;
+        border-radius: rem(8px);
+      }
+
+      button:hover {
+        cursor: pointer;
+        opacity: 0.6;
+      }
+    }
+  }
+}
