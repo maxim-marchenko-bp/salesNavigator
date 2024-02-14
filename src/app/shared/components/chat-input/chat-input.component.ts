@@ -22,5 +22,6 @@ export class ChatInputComponent {
 
   sendMessage(): void {
     this.sendText.emit(this.text);
+    this.text = '';
   }
 }

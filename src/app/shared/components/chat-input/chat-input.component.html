@@ -4,6 +4,7 @@
     [ngStyle]="{'background-color': bgColor}"
     [type]="inputType"
     [(ngModel)]="text"
+    (keydown.enter)="sendMessage()"
   />
   <button
     [disabled]="!text"
