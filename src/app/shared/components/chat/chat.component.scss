@@ -2,6 +2,10 @@
 @import "rem";
 
 .chat-container {
+  position: fixed;
+  right: rem(60px);
+  bottom: rem(140px);
+
   display: flex;
   flex-direction: column;
   width: rem(400px);
@@ -9,6 +13,8 @@
   border: rem(1px) solid $color-border-grey;
   background-color: $color-white;
   border-radius: rem(8px);
+  box-shadow: rem(2px) rem(4px) rem(16px) rgba(255, 255, 255, 0.47);
+  transition: all 0.3s ease;
 
   .header {
     display: flex;
@@ -176,47 +182,45 @@
 
   .footer {
     display: flex;
-    align-items: center;
     flex-direction: column;
     gap: rem(14px);
     padding: rem(14px);
     font-size: rem(14px);
     color: $color-grey;
 
-    .input-message-container {
+    .powered-by {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: rem(8px);
-      height: rem(24px);
-      width: 96%;
-      border-radius: rem(12px);
-      border: rem(1px) solid $color-light-grey;
-      padding: rem(6px);
-
-      input {
-        border: none;
-        flex-grow: 1;
-      }
-
-      input::placeholder {
-        color: $color-grey;
-      }
-
-      input:focus-visible {
-        outline: none;
-      }
-
-      button {
-        height: rem(24px);
-        border: none;
-        border-radius: rem(8px);
-      }
-
-      button:hover {
-        cursor: pointer;
-        opacity: 0.6;
-      }
+      justify-content: center;
     }
   }
+}
+
+.hidden {
+  display: none;
+}
+
+.show-chat-btn {
+  position: fixed;
+  bottom: rem(60px);
+  right: rem(60px);
+
+  .logo {
+    transition: opacity 0.3s ease;
+
+    img {
+      width: rem(60px);
+      height: rem(60px);
+      border-radius: 50%;
+      background: $color-light-grey;
+    }
+  }
+
+  .logo:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
+.mb-12 {
+  margin-bottom: rem(12px);
 }

@@ -1,16 +1,19 @@
-<div class="chat-container">
+<div class="chat-container" [ngClass]="{'hidden': !showChat}">
   <div class="header">
-    <div class="logo-container">
-      <div class="logo">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg"
-          alt="image" />
+    <ng-container *ngIf="(chatInfo$ | async) as chatInfo">
+      <div class="logo-container">
+        <div class="logo">
+          <img
+            [src]="chatInfo?.imageLink"
+            alt="image" />
+        </div>
+        <div class="text-container">
+          <div class="name">{{ chatInfo?.agentName }}</div>
+          <div class="sub-name">AI Assistant</div>
+        </div>
       </div>
-      <div class="text-container">
-        <div class="name">Cognition Agent</div>
-        <div class="sub-name">AI Assistant</div>
-      </div>
-    </div>
+    </ng-container>
+
     <div class="button-container">
       <i class="mdi mdi-24px mdi-email-outline"></i>
       <i class="mdi mdi-24px mdi-thumb-up-outline"></i>
@@ -40,6 +43,16 @@
           </div>
         </div>
 
+        <div class="bot-message">
+          <div class="text mb-12">Enter your email if you want us to follow-up on the conversation</div>
+          <app-chat-input
+            [placeholder]="'john.doe@mail.com'"
+            [bgColor]="'#D3D3D3'"
+            [inputType]="'email'"
+            (sendText)="sendEmail($event)"
+          ></app-chat-input>
+        </div>
+
         <div class="time">12:05pm</div>
       </div>
     </div>
@@ -56,12 +69,16 @@
   </div>
 
   <div class="footer">
-    <div class="input-message-container">
-      <input [placeholder]="'Write your message...'"/>
-      <button>
-        <i class="mdi mdi-arrow-right"></i>
-      </button>
-    </div>
+    <app-chat-input (sendText)="sendText($event)"></app-chat-input>
+
     <div class="powered-by">Powered by Cognition</div>
+  </div>
+</div>
+
+<div class="show-chat-btn" (click)="showChat =! showChat">
+  <div class="logo">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg"
+      alt="image" />
   </div>
 </div>
