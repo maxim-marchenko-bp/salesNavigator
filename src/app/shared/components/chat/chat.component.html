@@ -3,9 +3,7 @@
     <ng-container *ngIf="(chatInfo$ | async) as chatInfo">
       <div class="logo-container">
         <div class="logo">
-          <img
-            [src]="chatInfo?.imageLink"
-            alt="image" />
+          <img [src]="chatInfo?.imageLink" alt="image" />
         </div>
         <div class="text-container">
           <div class="name">{{ chatInfo?.agentName }}</div>
@@ -23,39 +21,70 @@
 
   <div class="divider"></div>
 
-  <div class="content">
-    <div class="client-message-container">
-      <div class="client-message-wrapper">
-        <div class="client-message">
-          <div class="text">Pricing</div>
-        </div>
-        <div class="time">12:04pm</div>
-      </div>
-    </div>
-
-    <div class="bot-message-container">
+  <div class="content" #messagesContainer>
+    <div class="bot-message-container" *ngIf="(firstMessage$ |async) as firstMessage">
       <div class="bot-message-wrapper">
         <div class="bot-message">
-          <div class="text">Our pricing plans are as follows:</div>
-          <div class="buttons">
-            <i class="mdi mdi-thumb-up-outline"></i>
-            <i class="mdi mdi-thumb-down-outline"></i>
-          </div>
+          <div class="text">{{ firstMessage?.message }}</div>
         </div>
-
-        <div class="bot-message">
-          <div class="text mb-12">Enter your email if you want us to follow-up on the conversation</div>
-          <app-chat-input
-            [placeholder]="'john.doe@mail.com'"
-            [bgColor]="'#D3D3D3'"
-            [inputType]="'email'"
-            (sendText)="sendEmail($event)"
-          ></app-chat-input>
-        </div>
-
-        <div class="time">12:05pm</div>
+        <div class="time">{{ firstMessage?.timestamp | date: 'hh:mm a' | lowercase }}</div>
       </div>
     </div>
+
+    <ng-container *ngIf="(messages$ | async) as messages">
+      @for (message of messages; track $index) {
+        @if (message.messageFrom === 'client') {
+          <div class="client-message-container">
+            <div class="client-message-wrapper">
+              <div class="client-message">
+                <div class="text">{{ message.message }}</div>
+              </div>
+              <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
+            </div>
+          </div>
+        } @else if(message.messageFrom === 'bot') {
+          @if(message.messageType === 'price') {
+            <div class="bot-message-container">
+              <div class="bot-message-wrapper">
+                <div class="bot-message">
+                  <div class="text" [innerHTML]="safeHtml(message.message)"></div>
+                  <div class="buttons">
+                    <i class="mdi mdi-thumb-up-outline"></i>
+                    <i class="mdi mdi-thumb-down-outline"></i>
+                  </div>
+                </div>
+
+                <div class="bot-message">
+                  <div class="text mb-12">Enter your email if you want us to follow-up on the conversation</div>
+                  <app-chat-input
+                    [placeholder]="'john.doe@mail.com'"
+                    [bgColor]="'#D3D3D3'"
+                    [inputType]="'email'"
+                    (sendText)="sendEmail($event)"
+                  ></app-chat-input>
+                </div>
+
+                <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
+              </div>
+            </div>
+          } @else {
+            <div class="bot-message-container">
+              <div class="bot-message-wrapper">
+                <div class="bot-message">
+                  <div class="text" [innerHTML]="safeHtml(message.message)"></div>
+                  <div class="buttons">
+                    <i class="mdi mdi-thumb-up-outline"></i>
+                    <i class="mdi mdi-thumb-down-outline"></i>
+                  </div>
+                </div>
+
+                <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
+              </div>
+            </div>
+          }
+        }
+      }
+    </ng-container>
   </div>
 
   <div class="question-tag">
@@ -77,8 +106,6 @@
 
 <div class="show-chat-btn" (click)="showChat =! showChat">
   <div class="logo">
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg"
-      alt="image" />
+    <i class="mdi mdi-24px mdi-message"></i>
   </div>
 </div>

@@ -205,13 +205,17 @@
   right: rem(60px);
 
   .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: rem(50px);
+    height: rem(50px);
+    background: #c50836;
+    border-radius: 50%;
     transition: opacity 0.3s ease;
 
-    img {
-      width: rem(60px);
-      height: rem(60px);
-      border-radius: 50%;
-      background: $color-light-grey;
+    i {
+      color: $color-white;
     }
   }
 

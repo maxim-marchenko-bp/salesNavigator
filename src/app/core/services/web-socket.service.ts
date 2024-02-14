@@ -1,30 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from "rxjs";
+import { FirstServerMessage, Message } from "../../shared/models/message.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
-  private webSocket!: Socket;
-  constructor() {
-    // // TODO: replace real address
-    // this.webSocket = new Socket({
-    //   url: "wss://echo.websocket.org",
-    //   options: {},
-    // });
-  }
-
-  connectToServer(): void {
-    this.webSocket.connect();
-  }
+  constructor(private webSocket: Socket) {}
 
   sendMessage(message: string): void {
     this.webSocket.emit('message', message);
   }
 
-  receiveMessage(): Observable<unknown> {
-    return this.webSocket.fromEvent('message');
+  firstMessageOnConnection(): Observable<FirstServerMessage> {
+    return this.webSocket.fromEvent('onConnection');
+  }
+
+  receiveMessage(): Observable<Message> {
+    return this.webSocket.fromEvent('messageFromServer');
   }
 
   disconnectFromServer(): void {
