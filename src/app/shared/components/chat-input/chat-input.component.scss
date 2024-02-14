@@ -1,0 +1,42 @@
+@import "colors";
+@import "rem";
+
+.input-message-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(8px);
+  height: rem(24px);
+  border-radius: rem(12px);
+  border: rem(1px) solid $color-light-grey;
+  padding: rem(6px);
+
+  input {
+    border: none;
+    flex-grow: 1;
+  }
+
+  input::placeholder {
+    color: $color-dark-grey;
+  }
+
+  input:focus-visible {
+    outline: none;
+  }
+
+  button {
+    height: rem(24px);
+    border: none;
+    border-radius: rem(8px);
+  }
+
+  button:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  button:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+}

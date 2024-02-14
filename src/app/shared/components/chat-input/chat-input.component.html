@@ -1,0 +1,14 @@
+<div class="input-message-container" [ngStyle]="{'background-color': bgColor}">
+  <input
+    [placeholder]="placeholder"
+    [ngStyle]="{'background-color': bgColor}"
+    [type]="inputType"
+    [(ngModel)]="text"
+  />
+  <button
+    [disabled]="!text"
+    (click)="sendMessage()"
+  >
+    <i class="mdi mdi-arrow-right"></i>
+  </button>
+</div>
