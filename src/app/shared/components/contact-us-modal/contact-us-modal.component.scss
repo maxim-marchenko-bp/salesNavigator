@@ -1,0 +1,84 @@
+@import "colors";
+@import "rem";
+
+.contact-us {
+  padding: 0 rem(20px) rem(20px) rem(20px);
+
+  @media (max-width: 610px) {
+    width: unset;
+  }
+
+  .body-container {
+    .input-email-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+
+      .title {
+        font-size: rem(14px);
+        line-height: rem(20px);
+      }
+
+      .input-email {
+        border: rem(1px) solid $color-light-grey;
+        padding: rem(5px);
+        border-radius: rem(4px);
+      }
+    }
+
+    .input-text {
+      margin-bottom: rem(20px);
+      height: rem(60px);
+      border: rem(1px) solid $color-light-grey;
+      padding: rem(5px);
+      border-radius: rem(4px);
+      resize: none;
+    }
+
+    .error {
+      color: $color-red;
+      font-size: rem(12px);
+      line-height: rem(20px);
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: rem(20px);
+
+    .button {
+      height: rem(30px);
+      width: 100%;
+      border-radius: rem(4px);
+    }
+
+    button:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: $color-light-grey;
+      border: rem(1px) solid $color-light-grey;
+      color: $color-dark-grey;
+      cursor: not-allowed;
+    }
+
+    .cancel-btn {
+      border: rem(1px) solid $color-light-grey;
+    }
+
+    .send-btn {
+      background-color: $color-dark-blue;
+      border: rem(1px) solid $color-dark-blue;
+      color: $color-white;
+    }
+  }
+}
+
+@media (max-width: 610px) {
+  ::ng-deep .ngneat-dialog-backdrop {
+    width: unset!important;
+  }
+}
