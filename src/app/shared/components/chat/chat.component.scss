@@ -16,6 +16,12 @@
   box-shadow: rem(2px) rem(4px) rem(16px) rgba(255, 255, 255, 0.47);
   transition: all 0.3s ease;
 
+  @media (max-width: 480px) {
+    width: unset;
+    position: static;
+    min-width: 320px;
+  }
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -88,7 +94,7 @@
 
         .client-message {
           background-color: $color-dark-blue;
-          border-radius: rem(10px) rem(10px) 0 rem(10px);
+          border-radius: rem(24px) rem(24px) 0 rem(24px);
           padding: rem(10px);
 
           .text {
@@ -117,8 +123,9 @@
         gap: rem(4px);
 
         .bot-message {
+          width: 80%;
           background-color: $color-background-grey;
-          border-radius: rem(10px) rem(10px) rem(10px) 0;
+          border-radius: rem(24px) rem(24px) rem(24px) 0;
           padding: rem(10px);
 
           .text {
@@ -137,6 +144,10 @@
 
               mdi {
                 font-size: rem(16px);
+              }
+
+              .active {
+                color: red;
               }
             }
 
@@ -158,8 +169,11 @@
   .question-tag {
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     gap: rem(4px);
     padding: 0 rem(14px);
+    height: rem(50px);
+    overflow: scroll;
 
     .tag-container {
       width: fit-content;
@@ -203,6 +217,10 @@
   position: fixed;
   bottom: rem(60px);
   right: rem(60px);
+
+  @media (max-width: 480px) {
+    right: rem(5px);
+  }
 
   .logo {
     display: flex;

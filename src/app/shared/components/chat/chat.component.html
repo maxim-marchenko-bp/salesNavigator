@@ -13,7 +13,7 @@
     </ng-container>
 
     <div class="button-container">
-      <i class="mdi mdi-24px mdi-email-outline"></i>
+      <i class="mdi mdi-24px mdi-email-outline" (click)="openContactUsDialog()"></i>
       <i class="mdi mdi-24px mdi-thumb-up-outline"></i>
       <i class="mdi mdi-24px mdi-thumb-down-outline"></i>
     </div>
@@ -27,12 +27,11 @@
         <div class="bot-message">
           <div class="text">{{ firstMessage?.message }}</div>
         </div>
-        <div class="time">{{ firstMessage?.timestamp | date: 'hh:mm a' | lowercase }}</div>
       </div>
     </div>
 
     <ng-container *ngIf="(messages$ | async) as messages">
-      @for (message of messages; track $index) {
+      @for (message of messages; let index = $index; track index) {
         @if (message.messageFrom === 'client') {
           <div class="client-message-container">
             <div class="client-message-wrapper">
@@ -43,59 +42,58 @@
             </div>
           </div>
         } @else if(message.messageFrom === 'bot') {
-          @if(message.messageType === 'price') {
-            <div class="bot-message-container">
-              <div class="bot-message-wrapper">
-                <div class="bot-message">
-                  <div class="text" [innerHTML]="safeHtml(message.message)"></div>
-                  <div class="buttons">
-                    <i class="mdi mdi-thumb-up-outline"></i>
-                    <i class="mdi mdi-thumb-down-outline"></i>
-                  </div>
+          <div class="bot-message-container">
+            <div class="bot-message-wrapper">
+              <div class="bot-message">
+                <div class="text" [innerHTML]="safeHtml(message.message)"></div>
+                <div class="buttons">
+                  <i
+                    class="mdi mdi-thumb-up-outline"
+                    [ngClass]="{active: message.messageId === 'a' + index && message.feedback === MessageFeedback.like}"
+                    (click)="sendFeedback('a' + index, MessageFeedback.like);
+                      message.feedback = MessageFeedback.like; message.messageId = 'a' + index"
+                  ></i>
+                  <i
+                    class="mdi mdi-thumb-down-outline"
+                    [ngClass]="{active: message.messageId === 'a' + index && message.feedback === MessageFeedback.dislike}"
+                    (click)="sendFeedback('a' + index, MessageFeedback.dislike);
+                      message.feedback = MessageFeedback.like; message.messageId = 'a' + index"
+                  ></i>
                 </div>
+              </div>
 
+              @if(message.messageType === 'price') {
                 <div class="bot-message">
                   <div class="text mb-12">Enter your email if you want us to follow-up on the conversation</div>
                   <app-chat-input
                     [placeholder]="'john.doe@mail.com'"
                     [bgColor]="'#D3D3D3'"
                     [inputType]="'email'"
-                    (sendText)="sendEmail($event)"
+                    (sendText)="sendEmail(message.userId, $event)"
                   ></app-chat-input>
                 </div>
+              }
 
-                <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
-              </div>
+              <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
             </div>
-          } @else {
-            <div class="bot-message-container">
-              <div class="bot-message-wrapper">
-                <div class="bot-message">
-                  <div class="text" [innerHTML]="safeHtml(message.message)"></div>
-                  <div class="buttons">
-                    <i class="mdi mdi-thumb-up-outline"></i>
-                    <i class="mdi mdi-thumb-down-outline"></i>
-                  </div>
-                </div>
-
-                <div class="time">{{ message.timestamp | date: 'hh:mm a' | lowercase }}</div>
-              </div>
-            </div>
-          }
+          </div>
         }
       }
     </ng-container>
   </div>
 
-  <div class="question-tag">
-    <div class="tag-container">
-      <div class="text">How can I return my order?</div>
-    </div>
+  <ng-container *ngIf="questions$ | async as questions">
+    @if(questions.length) {
+      <div class="question-tag">
+        @for (question of questions; track $index) {
+          <div class="tag-container" (click)="sendQuestion(question)">
+            <div class="text">{{ question }}</div>
+          </div>
+        }
+      </div>
+    }
+  </ng-container>
 
-    <div class="tag-container">
-      <div class="text">What is your return policy</div>
-    </div>
-  </div>
 
   <div class="footer">
     <app-chat-input (sendText)="sendText($event)"></app-chat-input>
