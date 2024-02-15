@@ -41,14 +41,22 @@ export class WsGateway implements OnModuleInit {
         messageType: 'price',
         timestamp: new Date()
       });
-    } else {
+    } else if (data?.toLowerCase() === 'How can I return my order?'.toLowerCase()) {
       this.server.emit('messageFromServer', {
         userId: client.id,
-        message: `Your message is ${data}`,
+        message: 'You can return your order in this way...',
         messageFrom: 'bot',
-        messageType: 'text',
+        messageType: 'answer',
         timestamp: new Date()
-      })
+      });
+    } else if (data?.toLowerCase() === 'What is your return policy?'.toLowerCase()) {
+      this.server.emit('messageFromServer', {
+        userId: client.id,
+        message: 'Our return policy is...',
+        messageFrom: 'bot',
+        messageType: 'answer',
+        timestamp: new Date()
+      });
     }
   }
 
@@ -56,7 +64,7 @@ export class WsGateway implements OnModuleInit {
     this.server.on('connection', (socket) => {
       setTimeout(() => {
         this.server.emit('onConnection', {
-          message: 'Hi! I\'m support bot',
+          message: 'Hi! I\'m a Support bot, how can I help you today?',
           messageFrom: 'bot',
           messageType: 'text',
           timestamp: new Date(),
