@@ -9,11 +9,11 @@
         class="input-email"
         [placeholder]="'john.doe@gmail.com'"
       />
-      @if (form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)) {
-        @if(form.get('email')?.errors?.['required']) {
+      @if (emailFormControl?.invalid && (emailFormControl?.dirty || emailFormControl?.touched)) {
+        @if(emailFormControl?.errors?.['required']) {
           <div class="error">Email is required</div>
         }
-        @if(form.get('email')?.errors?.['email']) {
+        @if(emailFormControl?.errors?.['email']) {
           <div class="error">Enter valid email</div>
         }
       }
@@ -25,12 +25,12 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="button cancel-btn" (click)="cancel()">Cancel</button>
+    <button type="button" class="button cancel-btn" (click)="close()">Cancel</button>
     <button
       type="button"
       class="button send-btn"
       [disabled]="form.invalid"
-      (click)="send()"
+      (click)="close(true)"
     >Send</button>
   </div>
 </div>

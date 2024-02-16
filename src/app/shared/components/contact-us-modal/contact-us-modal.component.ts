@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogRef } from "@ngneat/dialog";
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { ContactResponse } from "../../models/client-response";
 
 @Component({
   selector: 'app-contact-us-modal',
@@ -28,15 +27,11 @@ export class ContactUsModalComponent implements OnInit {
     });
   }
 
-  cancel(): void {
-    this.dialogRef.close();
+  close(submit = false): void {
+    this.dialogRef.close(submit ? this.form.getRawValue() : null)
   }
 
-  send(): void {
-    const data: ContactResponse = {
-      email: this.form.get('email')?.value,
-      message: this.form.get('message')?.value
-    }
-    this.dialogRef.close(data);
+  get emailFormControl() {
+    return this.form.get('email')
   }
 }

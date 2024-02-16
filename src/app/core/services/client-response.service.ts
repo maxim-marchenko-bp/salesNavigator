@@ -14,8 +14,8 @@ export class ClientResponseService {
     return this.http.get<string[]>('http://localhost:3000/questions');
   }
 
-  sendContact(email: string, message: string): Observable<ContactResponse> {
-    return this.http.post<ContactResponse>('http://localhost:3000/contact-us', { email, message });
+  sendContact(body: ContactResponse): Observable<ContactResponse> {
+    return this.http.post<ContactResponse>('http://localhost:3000/contact-us', body);
   }
 
   sendClientEmail(userId: string, email: string): Observable<EmailResponse> {

@@ -1,17 +1,19 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WebSocketService } from '../../../core/services/web-socket.service';
 import { ChatInputComponent } from "../chat-input/chat-input.component";
 import { AsyncPipe, DatePipe, LowerCasePipe, NgClass, NgIf } from "@angular/common";
 import { ChatInfoService } from "../../../core/services/chat-info.service";
-import { filter, Observable, Subject, switchMap, takeUntil } from "rxjs";
+import { filter, Observable, switchMap } from "rxjs";
 import { ChatInfo } from "../../models/chat-info.model";
 import { FirstServerMessage, Message } from "../../models/message.model";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ClientResponseService } from "../../../core/services/client-response.service";
 import { MessageFeedback } from "../../enums/message-feeback.enum";
 import { DialogService } from "@ngneat/dialog";
 import { ContactUsModalComponent } from "../contact-us-modal/contact-us-modal.component";
 import { ContactResponse } from "../../models/client-response";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SafeHtmlPipe } from "../../pipes/safe-html.pipe";
+import { IsLikePipe } from "../../pipes/is-like.pipe";
 
 @Component({
   selector: 'app-chat',
@@ -23,6 +25,8 @@ import { ContactResponse } from "../../models/client-response";
     NgIf,
     DatePipe,
     LowerCasePipe,
+    SafeHtmlPipe,
+    IsLikePipe,
   ],
   providers: [],
   templateUrl: './chat.component.html',
@@ -32,20 +36,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   MessageFeedback = MessageFeedback;
-  showChat: boolean = true;
+  showChat = true;
   chatInfo$: Observable<ChatInfo> | undefined;
   firstMessage$: Observable<FirstServerMessage> | undefined;
   message$: Observable<Message> | undefined;
   messages: Message[] = [];
   questions$: Observable<string[]> | undefined;
-  private unsubscribe$ = new Subject();
 
   constructor(
     private chatInfoService: ChatInfoService,
     private clientResponseService: ClientResponseService,
     private websocketService: WebSocketService,
     private dialogService: DialogService,
-    private sanitizer: DomSanitizer
+    private destroyRef: DestroyRef
   ) { }
 
   ngOnInit(): void {
@@ -54,8 +57,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.disconnectSocket();
-    this.unsubscribe$.next(0);
-    this.unsubscribe$.complete();
   }
 
   private initChatData(): void {
@@ -65,7 +66,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.questions$ = this.clientResponseService.getQuestions();
 
     this.message$?.pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(newMessage => {
       this.messages = [...this.messages, newMessage];
       if (this.messagesContainer) {
@@ -82,29 +83,18 @@ export class ChatComponent implements OnInit, OnDestroy {
       minHeight: 'auto'
     }).afterClosed$.pipe(
       filter(data => data),
-      switchMap((data: ContactResponse) => {
-        const { email, message } = data;
-        return this.clientResponseService.sendContact(email, message);
-      }),
+      switchMap((data: ContactResponse) => this.clientResponseService.sendContact(data)),
     ).subscribe();
   }
 
-  sendQuestion(question: string): void {
-    this.websocketService.sendMessage(question);
-  }
-
-  sendText(text: string): void {
-    this.websocketService.sendMessage(text);
+  sendMessage(message: string): void {
+    this.websocketService.sendMessage(message);
   }
 
   sendEmail(userId: string, email: string): void {
     this.clientResponseService.sendClientEmail(userId, email).pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe();
-  }
-
-  safeHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   sendFeedback(messageId: string, feedback: string, index: number): void {
@@ -113,16 +103,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.messages = [...this.messages];
 
     this.clientResponseService.sendClientMessageFeedback(messageId, feedback).pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe()
-  }
-
-  isLike(messageId: string, index: number, feedback: string): boolean {
-    return  messageId === 'a' + index && feedback === MessageFeedback.like
-  }
-
-  isDislike(messageId: string, index: number, feedback: string): boolean {
-    return  messageId === 'a' + index && feedback === MessageFeedback.dislike
   }
 
   private disconnectSocket() {

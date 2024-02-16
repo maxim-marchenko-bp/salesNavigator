@@ -44,23 +44,23 @@
         <div class="bot-message-container">
           <div class="bot-message-wrapper">
             <div class="bot-message">
-              <div class="text" [innerHTML]="safeHtml(message.message)"></div>
+              <div class="text" [innerHTML]="message.message | safeHtml"></div>
               <div class="buttons">
                 <i
                   class="mdi mdi-thumb-up-outline active"
                   [ngClass]="{
-                    'active': isLike(message.messageId, index, message.feedback),
-                    'mdi-thumb-up-outline': !isLike(message.messageId, index, message.feedback),
-                    'mdi-thumb-up': isLike(message.messageId, index, message.feedback),
+                    'active': message.messageId | isLike : index : message.feedback : MessageFeedback.like,
+                    'mdi-thumb-up-outline': !(message.messageId | isLike : index : message.feedback : MessageFeedback.like),
+                    'mdi-thumb-up': message.messageId | isLike : index : message.feedback : MessageFeedback.like,
                   }"
                   (click)="sendFeedback('a' + index, MessageFeedback.like, index)"
                 ></i>
                 <i
                   class="mdi"
                   [ngClass]="{
-                    'active': isDislike(message.messageId, index, message.feedback),
-                    'mdi-thumb-down-outline': !isDislike(message.messageId, index, message.feedback),
-                    'mdi-thumb-down': isDislike(message.messageId, index, message.feedback),
+                    'active': message.messageId | isLike : index : message.feedback : MessageFeedback.dislike,
+                    'mdi-thumb-down-outline': !(message.messageId | isLike : index : message.feedback : MessageFeedback.dislike),
+                    'mdi-thumb-down': message.messageId | isLike : index : message.feedback : MessageFeedback.dislike,
                   }"
                   (click)="sendFeedback('a' + index, MessageFeedback.dislike, index)"
                 ></i>
@@ -90,7 +90,7 @@
     @if(questions.length) {
       <div class="question-tag">
         @for (question of questions; track $index) {
-          <div class="tag-container" (click)="sendQuestion(question)">
+          <div class="tag-container" (click)="sendMessage(question)">
             <div class="text">{{ question }}</div>
           </div>
         }
@@ -100,7 +100,7 @@
 
 
   <div class="footer">
-    <app-chat-input (sendText)="sendText($event)"></app-chat-input>
+    <app-chat-input (sendText)="sendMessage($event)"></app-chat-input>
 
     <div class="powered-by">Powered by Cognition</div>
   </div>

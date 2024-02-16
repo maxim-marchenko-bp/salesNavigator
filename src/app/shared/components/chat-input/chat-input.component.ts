@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgStyle} from "@angular/common";
-import {FormsModule} from "@angular/forms";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgStyle } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-chat-input',
@@ -18,7 +18,7 @@ export class ChatInputComponent {
   @Input() inputType: 'text' | 'email' = 'text'
   @Output() sendText = new EventEmitter<string>();
 
-  text: string = '';
+  text = '';
 
   sendMessage(): void {
     this.sendText.emit(this.text);
