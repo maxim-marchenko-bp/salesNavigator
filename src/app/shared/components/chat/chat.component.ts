@@ -3,7 +3,7 @@ import { WebSocketService } from '../../../core/services/web-socket.service';
 import { ChatInputComponent } from "../chat-input/chat-input.component";
 import { AsyncPipe, DatePipe, LowerCasePipe, NgClass, NgIf } from "@angular/common";
 import { ChatInfoService } from "../../../core/services/chat-info.service";
-import { BehaviorSubject, filter, Observable, Subject, switchMap, takeUntil } from "rxjs";
+import { filter, Observable, Subject, switchMap, takeUntil } from "rxjs";
 import { ChatInfo } from "../../models/chat-info.model";
 import { FirstServerMessage, Message } from "../../models/message.model";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
@@ -36,7 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   chatInfo$: Observable<ChatInfo> | undefined;
   firstMessage$: Observable<FirstServerMessage> | undefined;
   message$: Observable<Message> | undefined;
-  messages$ = new BehaviorSubject<Message[]>([]);
+  messages: Message[] = [];
   questions$: Observable<string[]> | undefined;
   private unsubscribe$ = new Subject();
 
@@ -67,7 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.message$?.pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(newMessage => {
-      this.messages$?.next([...this.messages$.getValue(), newMessage]);
+      this.messages = [...this.messages, newMessage];
       if (this.messagesContainer) {
         setTimeout(() => {
           this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
@@ -107,10 +107,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  sendFeedback(messageId: string, feedback: string): void {
+  sendFeedback(messageId: string, feedback: string, index: number): void {
+    this.messages[index].messageId = messageId;
+    this.messages[index].feedback = feedback;
+    this.messages = [...this.messages];
+
     this.clientResponseService.sendClientMessageFeedback(messageId, feedback).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe()
+  }
+
+  isLike(messageId: string, index: number, feedback: string): boolean {
+    return  messageId === 'a' + index && feedback === MessageFeedback.like
+  }
+
+  isDislike(messageId: string, index: number, feedback: string): boolean {
+    return  messageId === 'a' + index && feedback === MessageFeedback.dislike
   }
 
   private disconnectSocket() {

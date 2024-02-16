@@ -14,12 +14,12 @@
   background-color: $color-white;
   border-radius: rem(8px);
   box-shadow: rem(2px) rem(4px) rem(16px) rgba(255, 255, 255, 0.47);
-  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-in-out forwards;
 
   @media (max-width: 480px) {
     width: unset;
     position: static;
-    min-width: 320px;
+    min-width: rem(320px);
   }
 
   .header {
@@ -145,10 +145,10 @@
               mdi {
                 font-size: rem(16px);
               }
+            }
 
-              .active {
-                color: red;
-              }
+            .active {
+              color: $color-dark;
             }
 
             i:hover {
@@ -209,8 +209,31 @@
   }
 }
 
+@keyframes slideIn {
+  from {
+    transform: translate(0, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
 .hidden {
-  display: none;
+  animation: slideOut 0.3s ease-in-out forwards;
+  //display: none;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(0, 100%);
+    opacity: 0;
+  }
 }
 
 .show-chat-btn {
